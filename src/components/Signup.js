@@ -3,12 +3,11 @@ import { Link } from "react-router-dom";
 import { Card, Form, Container } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
-
 function Signup() {
   const [password, setPassword] = useState();
   const [email, setEmail] = useState();
-  const [fullname, setFullname] = useState()
-  const [users, setUsers] = useState()
+  const [fullname, setFullname] = useState();
+  const [users, setUsers] = useState();
 
   let navigate = useNavigate();
 
@@ -18,48 +17,51 @@ function Signup() {
   };
 
   const getInitialUsers = () => {
-    const res = localStorage.getItem("users")
-    const parseUsers = JSON.parse(res)
-    if(parseUsers){
-      setUsers(parseUsers)
+    const res = localStorage.getItem("users");
+    const parseUsers = JSON.parse(res);
+    if (parseUsers) {
+      setUsers(parseUsers);
     }
-  }
+    addNewUser();
+  };
 
   const setNewUsers = () => {
-    localStorage.setItem("users", JSON.stringify(users))
-  }
+    localStorage.setItem("users", JSON.stringify(users));
+    routeChange();
+  };
 
   const addNewUser = () => {
-    setUsers(...users, {
+    setUsers((users) => [
+      ...users,
+      {
         fullname: fullname,
         email: email,
         password: password,
         budget: 0,
         expenses: [],
         savings: [],
-    })
-    setNewUsers()
-    routeChange()
-  }
+      },
+    ]);
 
-  useEffect(() => {
-    getInitialUsers()
-  }, [])
-  
+    setNewUsers();
+  };
+
+  useEffect(() => {}, []);
+
   return (
     <div className="d-flex justify-content-center align-items-center">
       <Card className="shadow w-50 d-flex my-5 flex-row justify-content-between align-items-center">
         <Form className="ms-5">
-            <Form.Group className="mb-3">
-                <Form.Label>Full name</Form.Label>
-                <Form.Control
+          <Form.Group className="mb-3">
+            <Form.Label>Full name</Form.Label>
+            <Form.Control
               type="text"
               onChange={(e) => {
                 setFullname(e.target.value);
               }}
               placeholder="Enter full name"
             />
-            </Form.Group>
+          </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
@@ -83,11 +85,7 @@ function Signup() {
           </Form.Group>
 
           <div className="d-flex justify-content-between align-items-center">
-            <a
-              className=" btn btn-primary me-3"
-              to={"/"}
-              onClick={addNewUser}
-            >
+            <a className=" btn btn-primary me-3" onClick={getInitialUsers}>
               Sign up
             </a>
             <Link className="text-decoration-none" to={"/"}>

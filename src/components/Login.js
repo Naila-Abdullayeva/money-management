@@ -1,19 +1,29 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Card, Form, Button, Container } from "react-bootstrap";
-import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 function Login() {
-  let navigate = useNavigate();
+  // let navigate = useNavigate();
 
   const routeChange = () => {
     let path = `/mainpage`;
-    navigate(path);
+    window.location.href = path;
   };
 
   const [password, setPassword] = useState();
   const [email, setEmail] = useState();
+
+  let exists = false;
+
+  function giveAlert() {
+    alert("Wrong email/password or user does not exist");
+    exists = true;
+  };
+
+  function checkExists() {
+    if (!exists) giveAlert();
+  }
 
   const users = [
     {
@@ -65,7 +75,7 @@ function Login() {
   };
 
   const handleUserLogin = (user) => {
-    localStorage.setItem("user", JSON.stringify(user))
+    localStorage.setItem("user", JSON.stringify(user));
     routeChange();
   };
 
@@ -74,7 +84,7 @@ function Login() {
       if (email === user.email && password === user.password) {
         handleUserLogin(user);
       } else {
-        console.log("User does not exist. Create an account first");
+        checkExists()
       }
     });
   };
@@ -109,14 +119,14 @@ function Login() {
             />
           </Form.Group>
           <div className="d-flex justify-content-between align-items-center">
-            <Button
+            <a
               onClick={() => {
                 doesUserExist();
               }}
-              className="btn-primary"
+              className="btn btn-primary"
             >
               Login
-            </Button>
+            </a>
             <Link className="text-decoration-none" to={"signup"}>
               Don't have an account?
             </Link>

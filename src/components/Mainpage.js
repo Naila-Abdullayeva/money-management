@@ -11,33 +11,35 @@ import { useNavigate } from "react-router";
 
 function Mainpage() {
   const { state } = useContext(AppContext);
-  const [currentState, setCurrentState] = useState()
+  const [user, setUser] = useState();
   let navigate = useNavigate();
   const [users, setUsers] = useState();
-
+  console.log(users);
 
   const routeChange = () => {
     let path = `/`;
     navigate(path);
   };
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  const getUser = () => {
+    setUser(JSON.parse(localStorage.getItem("user")));
+    setUsers(JSON.parse(localStorage.getItem("users")));
+  };
 
   const logOut = () => {
-    setUsers(JSON.parse(localStorage.getItem("users")));
-    users?.map((oldUser) => {
-      if (oldUser.id === currentState.id) {
-        oldUser = currentState;
-      }
-    });
+    
+    // localStorage.setItem("users", JSON.stringify(users))
     localStorage.removeItem("user");
     routeChange();
   };
 
   useEffect(() => {
-    setCurrentState(state)
-  }, [state])
-  
+    getUser()
+  }, []);
+
+  const refreshPage = () => {
+    window.location.reload();
+  };
 
   return (
     <div className="container-fluid">
@@ -45,7 +47,7 @@ function Mainpage() {
         <div className="d-flex justify-content-between align-items-center">
           <h1 className="my-4 fw-light">Money management</h1>
           <div className="d-flex align-items-center">
-            <h5 className="my-4 fw-light me-3">{user.fullname}</h5>
+            <h5 className="my-4 fw-light me-3">{user?.fullname}</h5>
             <a className="btn btn-danger" onClick={logOut}>
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </a>
